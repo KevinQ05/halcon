@@ -2,6 +2,7 @@ import { Navbar } from './Components/Navbar';
 import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Home from './Home';
 import { BasicsTi } from './BasicsTi';
+import { Footer } from './Components/Footer';
 
 function App() {
 
@@ -14,17 +15,19 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <div className='h-20'>
-          <Navbar items = {navbar_items}/>
+        <div className=' h-16'>
+          <Navbar items = {navbar_items} 
+            submenu = {true}
+
+          />
         </div>
- 
-        <div className="container mt-8 mb-12 p-4 pb-6 bg-base-200 w-11/12 m-auto rounded-lg">
           <Routes>
             <Route exact path='/' element ={<Home/>}/>
             <Route exact path='/Basics-TI' element={<BasicsTi/>}/>
           </Routes>
         </div>
-      </div>
+
+        <Footer/>
     </Router>
   );
 }
