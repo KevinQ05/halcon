@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FiHome } from 'react-icons/fi';
+
 export function Navbar(props) {
 
   // function getKeyByValue(object, value) { //To find the key given a value in a dict, for links
@@ -12,25 +14,26 @@ export function Navbar(props) {
   // Currently deprecated in favor of doing it by hand ^ too little items and need for more customization
 
   const [dark,setDark] = useState(true);
+  const [menuFocus,setMenuFocus] = useState(false);
 
   return (
-      <div class="navbar bg-base-100 mb-40 shadow-xl rounded-box rounded-t-none fixed">
+      <div class="navbar bg-base-100 mb-40 shadow-xl rounded-box rounded-t-none fixed z-50">
         <div class="navbar-start">
-          <div class="dropdown">
-            <label class="btn btn-ghost btn-circle" tabindex="0">
+          <div class="dropdown group">
+            <label class="btn btn-ghost btn-circle" tabindex="0" onClick={() => setMenuFocus(!menuFocus)}>
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" /></svg>
             </label>
-            <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-72">
+            <ul tabindex="0" className={"menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-72 " + (!menuFocus? "hidden":"")}>
             
-              <li><Link to="/">Inicio</Link></li>
-              <li><Link to="/Basics-TI">Un buen uso de la TI</Link></li>
+              <li><Link to="/" onClick={() => setMenuFocus(!menuFocus)}><FiHome></FiHome>Inicio</Link></li>
+              <li><Link to="/Basics-TI" onClick={() => setMenuFocus(!menuFocus)}>Un buen uso de la TI</Link></li>
               <div tabindex="0" class="collapse collapse-arrow">
                 <input type="checkbox" class="peer"/> 
-                <div class="collapse-title">
+                <div class="collapse-title text-sm">
                   Series y Sucesiones
                 </div>
                 <div class="collapse-content"> 
-                  <li ><Link to="/series/introduccion" className='hover:bg-info hover:text-white hover:font-bold'>Introducción</Link></li>
+                  <li ><Link to="/series/introduccion" className='hover:bg-info hover:text-white hover:font-bold' onClick={() => setMenuFocus(!menuFocus)}>Introducción</Link></li>
                 </div>
               </div>
             </ul>

@@ -8,7 +8,7 @@ import ti_basics_5 from "./images/ti_basics_5.png";
 
 export function BasicsTi() {
     return(
-        <div className="container mt-8 mb-12 p-4 pb-6 w-11/12 m-auto rounded-lg bg-base-200">
+        <div className="container mt-8 mb-12 p-4 pb-6 w-11/12 m-auto rounded-lg border-base-300 border-[1px] shadow-2xl">
             <article className="prose max-w-none">
                 <h1>Hay que aprender a usar la TI</h1>
                 <p className="lg:text-lg">Como primer artículo en el sitio, escribiré lo que es en mi opinión un punto fundamental:

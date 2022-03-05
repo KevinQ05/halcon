@@ -25,9 +25,9 @@ function App() {
             <Route exact path='/' element ={<Home/>}/>
             <Route exact path='/Basics-TI' element={<BasicsTi/>}/>
           </Routes>
-        </div>
 
         <Footer/>
+      </div>
     </Router>
   );
 }
