@@ -5,10 +5,11 @@ import ti_basics_2 from "./images/ti_basics_2.png";
 import ti_basics_3 from "./images/ti_basics_3.png";
 import ti_basics_4 from "./images/ti_basics_4.png";
 import ti_basics_5 from "./images/ti_basics_5.png";
+import ti_basics_6 from "./images/ti_basics_6.png";
 
 export function BasicsTi() {
     return(
-        <div className="container mt-8 mb-12 p-4 pb-6 w-11/12 m-auto rounded-lg border-base-300 border-[1px] shadow-2xl">
+        <div className="container mt-8 mb-12 p-4 py-10 w-11/12 m-auto rounded-lg border-base-300 border-[1px] shadow-2xl lg:px-32">
             <article className="prose max-w-none">
                 <h1>Hay que aprender a usar la TI</h1>
                 <p className="lg:text-lg">Como primer artículo en el sitio, escribiré lo que es en mi opinión un punto fundamental:
@@ -89,6 +90,15 @@ export function BasicsTi() {
                     </figure>
                     Y como podemos ver, la función se comporta como esperamos ya sea para entradas numéricas o simbólicas (letras), empezamos a ver la potencia
                     del CAS para encargarse del álgebra.
+                    <br />
+                    Para borrar una variable, utilizamos el comando <code>DelVar</code> , recordando que en la TI no importan las mayúsculas.
+                    <figure>
+                        <img src={ti_basics_6} alt="" />
+                    </figure>
+                    En la primera línea declaramos el valor de <code>x</code> como 100, en la segunda revisamos que efectivamente tiene un valor
+                    de 100.
+                    <br />
+                    En la tercera limpiamos o borramos su valor con el comando <code>DelVar</code> y finalmente comprobamos que se ha eliminado.
                 </p>
             </article>
         </div>

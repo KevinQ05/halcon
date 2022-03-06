@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Home from './Home';
 import { BasicsTi } from './BasicsTi';
 import { Footer } from './Components/Footer';
+import { SeriesIntro } from './SeriesIntro';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Routes>
             <Route exact path='/' element ={<Home/>}/>
             <Route exact path='/Basics-TI' element={<BasicsTi/>}/>
+            <Route exact path='/series/introduccion' element={<SeriesIntro/>}/>
           </Routes>
 
         <Footer/>
