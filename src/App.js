@@ -4,6 +4,7 @@ import Home from './Home';
 import { BasicsTi } from './BasicsTi';
 import { Footer } from './Components/Footer';
 import { SeriesIntro } from './SeriesIntro';
+import { Archivos } from './Archivos';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             <Route exact path='/' element ={<Home/>}/>
             <Route exact path='/Basics-TI' element={<BasicsTi/>}/>
             <Route exact path='/series/introduccion' element={<SeriesIntro/>}/>
+            <Route exact path='/files' element={<Archivos/>}/>
           </Routes>
 
         <Footer/>

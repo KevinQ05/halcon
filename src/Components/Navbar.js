@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiHome } from 'react-icons/fi';
+// import { FaFolderOpen } from 'react-icons/fa';
+import { FiFolder } from 'react-icons/fi';
 
 export function Navbar(props) {
 
@@ -26,6 +28,7 @@ export function Navbar(props) {
             <ul tabindex="0" className={"menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-72 " + (!menuFocus? "hidden":"")}>
             
               <li><Link to="/" onClick={() => setMenuFocus(!menuFocus)}><FiHome></FiHome>Inicio</Link></li>
+              <li><Link to="/files" onClick={() => setMenuFocus(!menuFocus)}><FiFolder/>Archivos</Link></li>
               <li><Link to="/Basics-TI" onClick={() => setMenuFocus(!menuFocus)}>Un buen uso de la TI</Link></li>
               <div tabindex="0" class="collapse collapse-arrow">
                 <input type="checkbox" class="peer"/> 
@@ -44,6 +47,7 @@ export function Navbar(props) {
         </div>
         <div class="navbar-end">
         {/* Acá van los botones con íconos: TODO */}
+
         <label class="swap swap-rotate">
   
         <input type="checkbox" className='mx-6 md:mx-10'
