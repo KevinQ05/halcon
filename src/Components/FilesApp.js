@@ -43,8 +43,8 @@ function getTree(posts) {
         <FolderItem
             name = {folder.name}
             files = {[
-                ...folder.files.map((file) => <FileItem name={file.name} link={file.url}/>),
-                ...folder.videos.map((video) => <VideoItem name={video.name} link = {video.url}/>)
+                ...folder.files.map((file) => <FileItem name={file.name} link={file.url} rel="noreferrer"/>),
+                ...folder.videos.map((video) => <VideoItem name={video.name} link = {video.url} rel="noreferrer"/>)
                 ]
             }
             folders = {getTree(folder.folders)}
