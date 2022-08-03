@@ -4,6 +4,7 @@ import { VideoItem } from "./VideoItem";
 import React from "react";
 import axios from "axios";
 import { ImSpinner } from "react-icons/im";
+import { AiOutlineReload } from "react-icons/ai";
 
 export class FilesApp extends React.Component {
   constructor(props) {
@@ -11,6 +12,7 @@ export class FilesApp extends React.Component {
     this.state = {
       posts: [],
       loading: true,
+      fetchDate: null,
     };
   }
 
@@ -21,11 +23,29 @@ export class FilesApp extends React.Component {
           "https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec"
         )
         .then((response) => {
-          this.setState({ posts: response.data, loading: false });
+          const data = response.data;
+          const today = new Date();
+          const dd = String(today.getDate()).padStart(2, "0");
+          const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+          const yyyy = today.getFullYear();
+          const hour = today.getHours();
+          const minutes = today.getMinutes();
+
+          this.setState({
+            posts: data,
+            loading: false,
+            fetchDate: `${dd}/${mm}/${yyyy}`,
+            fetchHour: `${hour}:${minutes}`,
+          });
           localStorage.setItem("data", JSON.stringify(this.state.posts));
           localStorage.setItem("isLoaded", true);
-          console.log(localStorage.getItem("data"));
-          console.log(localStorage.getItem("isLoaded"));
+          localStorage.setItem(
+            "date",
+            JSON.stringify({
+              fetchDate: this.state.fetchDate,
+              fetchHour: this.state.fetchHour,
+            })
+          );
         })
         .catch((error) => {
           console.log(error);
@@ -34,6 +54,8 @@ export class FilesApp extends React.Component {
       this.setState({
         posts: JSON.parse(localStorage.getItem("data")),
         loading: false,
+        fetchDate: JSON.parse(localStorage.getItem("date")).fetchDate,
+        fetchHour: JSON.parse(localStorage.getItem("date")).fetchHour,
       });
     }
   }
@@ -50,9 +72,30 @@ export class FilesApp extends React.Component {
                 Cargando <ImSpinner className=" mx-6 animate-spin" />
               </div>
             ) : (
-              <></>
+              <div className="w-full flex justify-center items-center">
+                <div className="w-ful h-full justify-end px-3 hidden sm:flex">
+                  {`Recuperado el ${this.state.fetchDate} a las ${this.state.fetchHour}`}
+                </div>
+                <div className="flex-col w-ful h-full justify-center items-center px-3 sm:hidden">
+                  <p>{`Recuperado el ${this.state.fetchDate}`}</p>
+                  <p className=" text-center">{`a las ${this.state.fetchHour}`}</p>
+                </div>
+                <a
+                  href=""
+                  className="btn btn-info hover:bg-blue-600 hover:border-blue-600 text-white rounded-lg mx-3 my-3"
+                >
+                  <AiOutlineReload
+                    size={"20"}
+                    className="px-0"
+                    onClick={() => {
+                      this.setState({ loading: true });
+                      localStorage.setItem("isLoaded", false);
+                    }}
+                  />
+                </a>
+              </div>
             )}
-            {posts}
+            <div>{posts}</div>
           </div>
         </div>
       </>
