@@ -83,15 +83,12 @@ export class FilesApp extends React.Component {
                 <a
                   href=""
                   className="btn btn-info hover:bg-blue-600 hover:border-blue-600 text-white rounded-lg mx-3 my-3"
+                  onClick={() => {
+                    this.setState({ loading: true });
+                    localStorage.setItem("isLoaded", false);
+                  }}
                 >
-                  <AiOutlineReload
-                    size={"20"}
-                    className="px-0"
-                    onClick={() => {
-                      this.setState({ loading: true });
-                      localStorage.setItem("isLoaded", false);
-                    }}
-                  />
+                  <AiOutlineReload size={"20"} className="px-0" />
                 </a>
               </div>
             )}
