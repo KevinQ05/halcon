@@ -88,6 +88,7 @@ export class FilesApp extends React.Component {
                   onClick={() => {
                     this.setState({ loading: true });
                     localStorage.setItem("isLoaded", false);
+                    this.forceUpdate();
                   }}
                 >
                   <AiOutlineReload size={"20"} className="px-0" />
@@ -103,7 +104,6 @@ export class FilesApp extends React.Component {
 }
 
 function getTree(posts) {
-  console.log(JSON.stringify(posts));
   let result = posts.map((folder) => (
     <FolderItem
       name={folder.name}
