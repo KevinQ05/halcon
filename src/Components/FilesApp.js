@@ -12,7 +12,8 @@ export class FilesApp extends React.Component {
     this.state = {
       posts: [],
       loading: true,
-      fetchDate: null,
+      fetchDate: "null",
+      fetchHour: "00:00",
     };
   }
 
