@@ -52,11 +52,12 @@ export class FilesApp extends React.Component {
           console.log(error);
         });
     } else {
+      const date = JSON.parse(localStorage.getItem("date"));
       this.setState({
         posts: JSON.parse(localStorage.getItem("data")),
         loading: false,
-        fetchDate: JSON.parse(localStorage.getItem("date")).fetchDate,
-        fetchHour: JSON.parse(localStorage.getItem("date")).fetchHour,
+        fetchDate: date ? date.fetchDate : "null",
+        fetchHour: date ? date.fetchHour : "00:00",
       });
     }
   }
