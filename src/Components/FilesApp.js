@@ -2,53 +2,68 @@ import { FileItem } from "./FileItem";
 import FolderItem from "./FolderItem";
 import { VideoItem } from "./VideoItem";
 import React from "react";
-import axios from 'axios';
-
+import axios from "axios";
+import { ImSpinner } from "react-icons/im";
 
 export class FilesApp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        posts: []
-    }
+      posts: [],
+      loading: true,
+    };
   }
-  
-  componentDidMount() {
-        axios.get("https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec")
-        .then( response => {
-            this.setState({ posts:response.data });
-        })
-        .catch(error => {
-            console.log(error);
-        })
-    }
 
+  componentDidMount() {
+    axios
+      .get(
+        "https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec"
+      )
+      .then((response) => {
+        this.setState({ posts: response.data, loading: false });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 
   render() {
-    let posts = this.state.posts
-    posts = getTree(posts)
+    let posts = this.state.posts;
+    posts = getTree(posts);
     return (
-        <>
-            <div>
-                {posts}
-            </div>
-        </>
+      <>
+        <div className={this.state.loading ? "h-auto" : ""}>
+          <div>
+            {this.state.loading ? (
+              <div className=" flex w-ful h-full justify-center py-6 font-bold text-3xl">
+                Cargando <ImSpinner className=" mx-6 animate-spin" />
+              </div>
+            ) : (
+              <></>
+            )}
+            {posts}
+          </div>
+        </div>
+      </>
     );
   }
-
 }
 
 function getTree(posts) {
-    let result = posts.map((folder)=>
-        <FolderItem
-            name = {folder.name}
-            files = {[
-                ...folder.files.map((file) => <FileItem name={file.name} link={file.url} rel="noreferrer"/>),
-                ...folder.videos.map((video) => <VideoItem name={video.name} link = {video.url} rel="noreferrer"/>)
-                ]
-            }
-            folders = {getTree(folder.folders)}
-        />
-    );
-    return result;
+  console.log(JSON.stringify(posts));
+  let result = posts.map((folder) => (
+    <FolderItem
+      name={folder.name}
+      files={[
+        ...folder.files.map((file) => (
+          <FileItem name={file.name} link={file.url} rel="noreferrer" />
+        )),
+        ...folder.videos.map((video) => (
+          <VideoItem name={video.name} link={video.url} rel="noreferrer" />
+        )),
+      ]}
+      folders={getTree(folder.folders)}
+    />
+  ));
+  return result;
 }
