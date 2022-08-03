@@ -82,17 +82,53 @@ export class FilesApp extends React.Component {
                   <p>{`Recuperado el ${this.state.fetchDate}`}</p>
                   <p className=" text-center">{`a las ${this.state.fetchHour}`}</p>
                 </div>
-                <a
-                  href=""
+                <button
                   className="btn btn-info hover:bg-blue-600 hover:border-blue-600 text-white rounded-lg mx-3 my-3"
                   onClick={() => {
-                    this.setState({ loading: true });
-                    localStorage.setItem("isLoaded", false);
-                    this.forceUpdate();
+                    this.setState({ loading: true, posts: [] });
+                    //OOGA BOOGA TEMPORARY SOLUTION
+                    axios
+                      .get(
+                        "https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec"
+                      )
+                      .then((response) => {
+                        const data = response.data;
+                        const today = new Date();
+                        const dd = String(today.getDate()).padStart(2, "0");
+                        const mm = String(today.getMonth() + 1).padStart(
+                          2,
+                          "0"
+                        ); //January is 0!
+                        const yyyy = today.getFullYear();
+                        const hour = today.getHours();
+                        const minutes = today.getMinutes();
+
+                        this.setState({
+                          posts: data,
+                          loading: false,
+                          fetchDate: `${dd}/${mm}/${yyyy}`,
+                          fetchHour: `${hour}:${minutes}`,
+                        });
+                        localStorage.setItem(
+                          "data",
+                          JSON.stringify(this.state.posts)
+                        );
+                        localStorage.setItem("isLoaded", true);
+                        localStorage.setItem(
+                          "date",
+                          JSON.stringify({
+                            fetchDate: this.state.fetchDate,
+                            fetchHour: this.state.fetchHour,
+                          })
+                        );
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
                   }}
                 >
                   <AiOutlineReload size={"20"} className="px-0" />
-                </a>
+                </button>
               </div>
             )}
             <div>{posts}</div>
