@@ -15,16 +15,27 @@ export class FilesApp extends React.Component {
   }
 
   componentDidMount() {
-    axios
-      .get(
-        "https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec"
-      )
-      .then((response) => {
-        this.setState({ posts: response.data, loading: false });
-      })
-      .catch((error) => {
-        console.log(error);
+    if (localStorage.getItem("isLoaded") !== "true") {
+      axios
+        .get(
+          "https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec"
+        )
+        .then((response) => {
+          this.setState({ posts: response.data, loading: false });
+          localStorage.setItem("data", JSON.stringify(this.state.posts));
+          localStorage.setItem("isLoaded", true);
+          console.log(localStorage.getItem("data"));
+          console.log(localStorage.getItem("isLoaded"));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } else {
+      this.setState({
+        posts: JSON.parse(localStorage.getItem("data")),
+        loading: false,
       });
+    }
   }
 
   render() {
