@@ -69,7 +69,7 @@ export class FilesApp extends React.Component {
                 Cargando <ImSpinner className=" mx-6 animate-spin" />
               </div>
             ) : (
-              <div className="w-full flex justify-center items-center">
+              <div className="w-full flex justify-center items-center lg:justify-end">
                 <div className="w-ful h-full justify-end px-3 hidden sm:flex">
                   {`Recuperado el ${this.state.fetchDate} a las ${this.state.fetchHour}`}
                 </div>
