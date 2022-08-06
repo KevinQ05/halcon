@@ -6,8 +6,7 @@ import { BsArrowReturnRight, BsArrowBarRight } from "react-icons/bs";
 const FolderItem = (props) => {
   const [open, setOpen] = useState(false);
 
-  let files = getFileTree(props);
-  let folders = <div>{props.folders}</div>;
+  const { files, folders } = props;
 
   return (
     <div
@@ -31,7 +30,7 @@ const FolderItem = (props) => {
       </div>
 
       <div class={"collapse-content " + (open ? "" : "hidden")}>
-        {[...files, folders]}
+        {[...renderFiles(files), folders]}
       </div>
     </div>
   );
@@ -39,24 +38,20 @@ const FolderItem = (props) => {
 
 export default FolderItem;
 
-function getFileTree(props) {
+function renderFiles(fileArray) {
   let files = [];
-  for (let i = 0; i < props.files.length - 1; i++) {
+
+  for (let [index, file] of fileArray.entries()) {
     files.push(
-      <div className="flex sm:translate-x-4">
+      <div className="flex sm:translate-x-4" key={index}>
         <BsArrowBarRight
           size={40}
           className="my-auto px-2 pl-0 sm:pl-1 hidden sm:flex"
         />
-        <div className="w-fit my-auto">{props.files[i]}</div>
+        <div className="w-fit my-auto">{file}</div>
       </div>
     );
   }
-  files.push(
-    <div className="flex sm:translate-x-4">
-      <BsArrowReturnRight size={40} className="my-auto px-2 hidden sm:flex" />
-      <div className="w-fit my-auto">{props.files[props.files.length - 1]}</div>
-    </div>
-  );
+
   return files;
 }

@@ -5,6 +5,10 @@ import React from "react";
 import axios from "axios";
 import { ImSpinner } from "react-icons/im";
 import { AiOutlineReload } from "react-icons/ai";
+import { data } from "autoprefixer";
+
+const DRIVE_API_URL =
+  "https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec";
 
 export class FilesApp extends React.Component {
   constructor(props) {
@@ -17,54 +21,45 @@ export class FilesApp extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (localStorage.getItem("isLoaded") !== "true") {
-      axios
-        .get(
-          "https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec"
-        )
-        .then((response) => {
-          const data = response.data;
-          const today = new Date();
-          const dd = String(today.getDate()).padStart(2, "0");
-          const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-          const yyyy = today.getFullYear();
-          const hour = today.getHours();
-          const minutes = today.getMinutes();
+  async getFoldersFromAPI() {
+    const response = await axios.get(DRIVE_API_URL);
+    this.setState({
+      posts: response.data,
+      loading: false,
+      fetchDate: getFetchDate(),
+      fetchHour: getFetchHour(),
+    });
+    populateLocalStorage({
+      isLoaded: true,
+      data: JSON.stringify(response.data),
+      date: JSON.stringify({
+        fetchDate: getFetchDate(),
+        fetchHour: getFetchHour(),
+      }),
+    });
+  }
 
-          this.setState({
-            posts: data,
-            loading: false,
-            fetchDate: `${dd}/${mm}/${yyyy}`,
-            fetchHour: `${hour}:${minutes}`,
-          });
-          localStorage.setItem("data", JSON.stringify(this.state.posts));
-          localStorage.setItem("isLoaded", true);
-          localStorage.setItem(
-            "date",
-            JSON.stringify({
-              fetchDate: this.state.fetchDate,
-              fetchHour: this.state.fetchHour,
-            })
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+  getFoldersFromStorage() {
+    const date = JSON.parse(localStorage.getItem("date"));
+    this.setState({
+      posts: JSON.parse(localStorage.getItem("data")),
+      loading: false,
+      fetchDate: date ? date.fetchDate : "null",
+      fetchHour: date ? date.fetchHour : "00:00",
+    });
+  }
+
+  async componentDidMount() {
+    if (localStorage.getItem("isLoaded") !== "true") {
+      this.getFoldersFromAPI();
     } else {
-      const date = JSON.parse(localStorage.getItem("date"));
-      this.setState({
-        posts: JSON.parse(localStorage.getItem("data")),
-        loading: false,
-        fetchDate: date ? date.fetchDate : "null",
-        fetchHour: date ? date.fetchHour : "00:00",
-      });
+      this.getFoldersFromStorage();
     }
   }
 
   render() {
-    let posts = this.state.posts;
-    posts = getTree(posts);
+    let folderStructure = this.state.posts;
+    folderStructure = renderFolders(folderStructure);
     return (
       <>
         <div className={this.state.loading ? "h-auto" : ""}>
@@ -84,54 +79,16 @@ export class FilesApp extends React.Component {
                 </div>
                 <button
                   className="btn btn-info hover:bg-blue-600 hover:border-blue-600 text-white rounded-lg mx-3 my-3"
-                  onClick={() => {
+                  onClick={async () => {
                     this.setState({ loading: true, posts: [] });
-                    //OOGA BOOGA TEMPORARY SOLUTION
-                    axios
-                      .get(
-                        "https://script.google.com/macros/s/AKfycbyL-rBrCXd5xZ49EcgJbmguGHxAX2M9JFEW9CtaU1NZrnLnQnsPu6F6KZMEWP2qL2nE/exec"
-                      )
-                      .then((response) => {
-                        const data = response.data;
-                        const today = new Date();
-                        const dd = String(today.getDate()).padStart(2, "0");
-                        const mm = String(today.getMonth() + 1).padStart(
-                          2,
-                          "0"
-                        ); //January is 0!
-                        const yyyy = today.getFullYear();
-                        const hour = today.getHours();
-                        const minutes = today.getMinutes();
-
-                        this.setState({
-                          posts: data,
-                          loading: false,
-                          fetchDate: `${dd}/${mm}/${yyyy}`,
-                          fetchHour: `${hour}:${minutes}`,
-                        });
-                        localStorage.setItem(
-                          "data",
-                          JSON.stringify(this.state.posts)
-                        );
-                        localStorage.setItem("isLoaded", true);
-                        localStorage.setItem(
-                          "date",
-                          JSON.stringify({
-                            fetchDate: this.state.fetchDate,
-                            fetchHour: this.state.fetchHour,
-                          })
-                        );
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                      });
+                    this.getFoldersFromAPI();
                   }}
                 >
                   <AiOutlineReload size={"20"} className="px-0" />
                 </button>
               </div>
             )}
-            <div>{posts}</div>
+            <div>{folderStructure}</div>
           </div>
         </div>
       </>
@@ -139,8 +96,8 @@ export class FilesApp extends React.Component {
   }
 }
 
-function getTree(posts) {
-  let result = posts.map((folder) => (
+function renderFolders(folderArray) {
+  let result = folderArray.map((folder) => (
     <FolderItem
       name={folder.name}
       files={[
@@ -151,8 +108,31 @@ function getTree(posts) {
           <VideoItem name={video.name} link={video.url} rel="noreferrer" />
         )),
       ]}
-      folders={getTree(folder.folders)}
+      folders={renderFolders(folder.folders)}
     />
   ));
   return result;
+}
+
+function getFetchDate() {
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2, "0");
+  const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  const yyyy = today.getFullYear();
+
+  return `${dd}/${mm}/${yyyy}`;
+}
+function getFetchHour() {
+  const today = new Date();
+
+  const hour = String(today.getHours()).padStart(2, "0");
+  const minutes = String(today.getMinutes()).padStart(2, "0");
+
+  return `${hour}:${minutes}`;
+}
+
+function populateLocalStorage(args) {
+  for (const [key, value] of Object.entries(args)) {
+    localStorage.setItem(`${key}`, `${value}`);
+  }
 }
